@@ -8,6 +8,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 require('dotenv').config();
 
 const webpackConfig = {
+    
     devtool: 'source-map',
 
     entry: {

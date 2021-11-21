@@ -3,18 +3,18 @@
 /**
  * Load Backend related actions
  *
- * @class   ACOTRS_Backend
+ * @class   UIEMLMS_Backend
  */
-
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 
-class ACOTRS_Backend
+class UIEMLMS_Backend
 {
-    private $method_id = 'acotrs_shipping';
+
+
     /**
      * Class intance for singleton  class
      *
@@ -93,121 +93,71 @@ class ACOTRS_Backend
      * @access  public
      * @since   1.0.0
      */
-    public $hook_suffix = array();
-
-    /**
-     * WP DB
-     */
-    private $wpdb;
+    public array $hook_suffix = array();
 
 
     /**
      * Constructor function.
      *
      * @access  public
-     * @param string $file plugin start file path.
+     * @param string $file plugin start file path. f
      * @since   1.0.0
      */
     public function __construct($file = '')
     {
-        global $wpdb;
-        $this->wpdb = $wpdb;
-        $this->version = ACOTRS_VERSION;
-        $this->token = ACOTRS_TOKEN;
+        $this->version = UIEMLMS_VERSION;
+        $this->token = UIEMLMS_TOKEN;
         $this->file = $file;
         $this->dir = dirname($this->file);
         $this->assets_dir = trailingslashit($this->dir) . 'assets';
         $this->assets_url = esc_url(trailingslashit(plugins_url('/assets/', $this->file)));
         $this->script_suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
         $plugin = plugin_basename($this->file);
-        
-        // Add woocommerce settings page to $hook_suffix 
-        array_push($this->hook_suffix, 'woocommerce_page_wc-settings');
 
         // add action links to link to link list display on the plugins page.
         add_filter("plugin_action_links_$plugin", array($this, 'pluginActionLinks'));
 
         // reg activation hook.
         register_activation_hook($this->file, array($this, 'install'));
-        
         // reg deactivation hook.
         register_deactivation_hook($this->file, array($this, 'deactivation'));
 
+        if($this->uiemlsms_is_masterstudy_activated() == true){
+            // reg admin menu.
+            add_action('admin_menu', array($this, 'uiemlms_register_root_page'), 30);
 
-        if($this->isWoocommerceActivated()){
             // enqueue scripts & styles.
             add_action('admin_enqueue_scripts', array($this, 'adminEnqueueScripts'), 10, 1);
             add_action('admin_enqueue_scripts', array($this, 'adminEnqueueStyles'), 10, 1);
-
-            // add_filter( 'woocommerce_shipping_zone_shipping_methods', array($this, 'acotrs_customize_shipping_zone_shipping_methods'), 10, 4 );
-            
-
-            // Admin Menu 
-            add_action( 'admin_menu', array($this, 'acotrs_admin_menu_page_hook') );
+        }else{
+            // Admin notice if MasterStudy in inactive 
+            add_action('admin_notices', array($this, 'noticeNeedMasterStudy'));
         }
     }
-    
-    /**
-     * @access  private
-     * @desc    Add saperate admin menu for acotrs shipping table
-     * 
-    */
 
-    public function acotrs_admin_menu_page_hook(){
-        $this->hook_suffix[] = add_submenu_page( 
-                'woocommerce', 
-                __('Advanced Table Rate Shipping', 'advanced-table-rate-shipping-for-woocommerce'), 
-                __('Advanced Table Rate Shipping', 'advanced-table-rate-shipping-for-woocommerce'), 
-                'manage_options', 
-                'acotrs', 
-                array($this, 'acotrs_admin_page_callback'), 
-                90000 
-        );
-    }
+
 
 
     /**
+     * Check if learnpress is activated
+     *
      * @access  public
-     * @return  page content
-     * 
+     * @return  boolean woocommerce install status
      */
-    public function acotrs_admin_page_callback(){
-        echo (
-            '<div id="' . $this->token . '_ui_root" class="bg-white border-round-5 pb-5">
-                <div class="' . $this->token . '_loader"><p>' . __('Loading User Interface...', 'advanced-table-rate-shipping-for-woocommerce') . '</p></div>
-            </div>'
-        );
-
-        wp_localize_script(
-            $this->token . '-backend',
-            $this->token . 'shipping_settings',
-            array(
-                'method_id' => $this->method_id
-            )
-        );
-    }
-
-
-    public function acotrs_customize_shipping_zone_shipping_methods($methods, $raw_methods, $allowed_classes, $instance){
-        // $methods_array = array();
-        
-        foreach($methods as $k => $m){
-            if($m->id === 'acotrs_shipping' ){
-                // unset($methods[$k]);
-                // if(count($methods_array) > 0)
-                //     continue;
-                // array_push($methods_array, $m);
-            }    
+    public function uiemlsms_is_masterstudy_activated()
+    {
+        if (in_array('learnpress/learnpress.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+            return true;
         }
-        
-        // if(count($methods_array) > 0) 
-        //     $methods = array_merge($methods, $methods_array);
-
-        return $methods; 
+        if (is_multisite()) {
+            $plugins = get_site_option('active_sitewide_plugins');
+            if (isset($plugins['learnpress/learnpress.php'])) {
+                return true;
+            }
+        }
+        return false;
     }
 
-
- 
 
     /**
      * Ensures only one instance of Class is loaded or can be loaded.
@@ -236,33 +186,12 @@ class ACOTRS_Backend
     public function pluginActionLinks($links)
     {
         $action_links = array(
-            'settings' => '<a href="' . admin_url('admin.php?page=' . $this->token) . '">'
-                . __('Configure', 'advanced-table-rate-shipping-for-woocommerce') . '</a>'
+            'settings' => '<a href="' . admin_url('admin.php?page=' . $this->token . '-admin-ui/') . '">'
+                . __('Configure', 'learnpress-import-csv') . '</a>'
         );
 
         return array_merge($action_links, $links);
     }
-
-    /**
-     * Check if woocommerce is activated
-     *
-     * @access  public
-     * @return  boolean woocommerce install status
-     */
-    public function isWoocommerceActivated()
-    {
-        if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-            return true;
-        }
-        if (is_multisite()) {
-            $plugins = get_site_option('active_sitewide_plugins');
-            if (isset($plugins['woocommerce/woocommerce.php'])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
 
     /**
@@ -274,21 +203,60 @@ class ACOTRS_Backend
      */
     public function install()
     {
-        global $wpdb;
-        include_once ABSPATH . '/wp-admin/includes/upgrade.php';
-        $table_charset = '';
-        $prefix = $wpdb->prefix;
-        $users_table = $prefix . 'um_vip_users';
-        if ($wpdb->has_cap('collation')) {
-            if (!empty($wpdb->charset)) {
-                $table_charset = "DEFAULT CHARACTER SET {$wpdb->charset}";
-            }
-            if (!empty($wpdb->collate)) {
-                $table_charset .= " COLLATE {$wpdb->collate}";
-            }
+    }
+
+    /**
+     * WooCommerce not active notice.
+     *
+     * @access  public
+     * @return void Fallack notice.
+     */
+    public function noticeNeedMasterStudy()
+    {
+        
+        if (in_array('masterstudy-lms-learning-management-system/masterstudy-lms-learning-management-system.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+            return true;
         }
-        $create_vip_users_sql = "CREATE TABLE {$users_table} (id int(11) NOT NULL auto_increment,user_id int(11) NOT NULL,user_type tinyint(4) NOT NULL default 0,startTime datetime NOT NULL default '0000-00-00 00:00:00',endTime datetime NOT NULL default '0000-00-00 00:00:00',PRIMARY KEY (id),INDEX uid_index(user_id),INDEX utype_index(user_type)) ENGINE = MyISAM {$table_charset};";
-        maybe_create_table($users_table, $create_vip_users_sql);
+
+        $error = sprintf(
+        /* translators: %s: Plugin Name. */
+            __(
+                '%s requires <a href="https://wordpress.org/plugins/masterstudy-lms-learning-management-system/">MasterStudy LMS – WordPress Course Plugin</a> to be installed & activated!',
+                'user-import-export-mlms'
+            ),
+            UIEMLMS_PLUGIN_NAME
+        );
+
+        echo ('<div class="error"><p>' . $error . '</p></div>');
+    }
+
+    /**
+     * Creating admin pages
+     */
+    public function uiemlms_register_root_page()
+    {
+
+        $this->hook_suffix[] = add_management_page( 
+            __('User Import & Export'), 
+            __('User Import & Export'), 
+            'manage_options',
+            $this->token . '-settings', 
+            array($this, 'adminUi'), 
+            8
+        );
+    }
+
+    /**
+     * Calling view function for admin page components
+     */
+    public function adminUi()
+    {
+
+        echo (
+            '<div id="' . $this->token . '_ui_root">
+                <div class="' . $this->token . '_loader"><p>' . __('Loading User Interface...', 'learnpress-import-csv') . '</p></div>
+            </div>'
+        );
     }
 
 
@@ -299,17 +267,10 @@ class ACOTRS_Backend
      * @return  void
      * @since   1.0.0
      */
-    public function adminEnqueueStyles($screen)
+    public function adminEnqueueStyles()
     {
-        
-        if (!isset($this->hook_suffix) || empty($this->hook_suffix)) {    
-            return;
-        }
-        if (in_array($screen, $this->hook_suffix, true)) {
-            wp_register_style($this->token . '-admin', esc_url($this->assets_url) . 'css/backend.css', array(), $this->version);
-            wp_enqueue_style($this->token . '-admin');
-            wp_enqueue_style($this->token . '-admin-wrapper');
-        }
+        wp_register_style($this->token . '-admin', esc_url($this->assets_url) . 'css/backend.css', array(), $this->version);
+        wp_enqueue_style($this->token . '-admin');
     }
 
     /**
@@ -321,11 +282,13 @@ class ACOTRS_Backend
      */
     public function adminEnqueueScripts()
     {
-        if (!isset($this->hook_suffix) || empty($this->hook_suffix)) {   
+        if (!isset($this->hook_suffix) || empty($this->hook_suffix)) {
             return;
         }
 
         $screen = get_current_screen();
+
+        
 
         if (in_array($screen->id, $this->hook_suffix, true)) {
             // Enqueue WordPress media scripts.
@@ -346,15 +309,11 @@ class ACOTRS_Backend
                     'api_nonce' => wp_create_nonce('wp_rest'),
                     'root' => rest_url($this->token . '/v1/'),
                     'assets_url' => $this->assets_url,
-                    'currency_symbol' => get_woocommerce_currency_symbol(), 
-                    'base_url' => get_admin_url( '/' )
                 )
             );
         }
     }
 
-
-    
     /**
      * Deactivation hook
      */
