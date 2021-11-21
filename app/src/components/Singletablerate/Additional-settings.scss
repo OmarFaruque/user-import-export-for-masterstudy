@@ -1,0 +1,53 @@
+@import '../../pages/Tableofrates.scss';
+
+.additionalSettings{
+    flex: 1;
+    border-radius: 10px;
+    margin-top: 5px;
+    .AdditionalInner{
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 40px 20px 20px 20px;
+        text-align: left;
+        h5{
+            font-size: 18px;
+            margin-top: 0;
+        }
+        .d_flex{
+            padding: 5px 0;
+            span{
+                vertical-align: middle;
+            }
+        }
+    }
+    .deleteThis{
+            button{
+                
+                display: flex;
+                width: 100%;
+                margin-top: 1.5rem;
+                background-color: transparent;
+                padding: 20px;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                justify-content: center;
+                align-items: center;
+                &:not(.desabled){
+                    border: 1px solid red;
+                    color: red;
+                }
+            }
+            button:not(.desabled):hover{
+                background-color: red;
+                color: white;
+            }
+            button:focus{
+                outline: none;
+            }
+            button.desabled{
+                border-color: lightgray;
+                color: gray;
+            }
+        }
+}

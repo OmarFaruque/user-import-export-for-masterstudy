@@ -1,0 +1,57 @@
+.form_group {
+    display: flex;
+    align-items: center;
+    position: relative;
+    .refreshAuto{
+        width: 25px;
+        height: 25px;
+        display: block;
+        position: absolute;
+        background-image: url(../../icons/refresh_icon.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        top: 18px;
+        left: 10px;
+        opacity: 0.3;
+        cursor: pointer;
+        &.refresh{
+            transform: rotate(180deg);
+            transition: transform 1.5s linear;
+        }
+        :hover{
+            opacity: 0.8;
+        }
+    }
+    label {
+		flex: 0 0 40%;
+	}
+    input[type="text"], input[type="number"], input[type="email"], textarea, select{
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 3px;
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 18px;
+        color: #1B2733;
+        &:focus {
+            border-color: #006AFF;
+            box-shadow: none;
+            outline: none;
+        }
+        &[name="selected_zone"]{
+            padding-left: 45px;
+        }
+    }
+    label + input[type="text"], label + textarea, label + input[type="number"], label + input[type="email"]{
+        flex: 0 0 42.61%;
+    }
+    input[type="text"], input[type="number"], input[type="email"], select {
+        height: 48px;
+        margin-top: 5px;
+        line-height: 48px;
+    }
+}

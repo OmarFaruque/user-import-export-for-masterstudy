@@ -1,0 +1,33 @@
+@import '../backend';
+    .additionalHeader{
+        h4{
+            text-align: left;
+            font-size: 20px;
+        }
+    }
+    .wrap{
+        .d_inline_block{
+            margin-top: 22px !important;
+            div{
+                display: inline-block;
+                input{
+                    line-height: unset;
+                }
+            }
+            strong{
+                margin-left: 5px;
+            }
+        }
+        .numberformate{
+            input{
+                width: 100%;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                border-radius: 3px;
+            }
+        }
+    } 
+    .note{
+        margin-left: 25px;
+        margin-top: 5px;
+    }
+ 

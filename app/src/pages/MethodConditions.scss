@@ -1,0 +1,149 @@
+@import '../backend';
+
+:global(div.DayPicker-Day) {
+    border-radius: 0 !important;
+}
+
+:global(div.DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside)){
+    background-color: #f0f8ff !important;
+    color: #4a90e2;
+}
+
+:global(div.DayPicker-Day--start) {
+    border-top-left-radius: 50% !important;
+    border-bottom-left-radius: 50% !important;
+}
+
+:global(div.DayPicker-Day--end) {
+    border-top-right-radius: 50% !important;
+    border-bottom-right-radius: 50% !important;
+}
+:global(div.DayPicker div.DayPicker-wrapper){
+    padding-bottom:0;
+}
+
+
+
+.multiSelect{
+    >div:first-child{
+        max-width: 100px;
+    }
+    >div:nth-child(2){
+        max-width: 100px;
+    }
+}
+
+  
+  
+
+
+
+.singleCondition{
+    display: flex;
+    background-color: #efefef;
+    padding: 20px;
+    border-radius: 5px;
+    vertical-align: middle;
+    margin-bottom: 20px;
+    .datePickerWrap{
+        position: relative;
+        a.closeBtn{
+            font-size: 30px;
+            color: white;
+            border-color: #555;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 200px;
+            background-color: #999;
+            transition: all 0.3s ease;
+            span{
+                font-size: 30px;
+                margin: unset;
+            }
+        }
+        a.closeBtn:hover{
+            background-color: red;
+        }
+        div.buttonGroup{
+            width: 200px;
+            display: flex;
+            margin: 0 auto;
+            button:first-child{
+                margin-right: 20px;
+                background-color: violet;
+            }
+            button{
+                margin-top: 0;
+                display: inline-block;
+            }
+            button:focus{
+                outline: none;
+            }
+        }
+        
+        .Selectable{
+            background-color: transparent !important;
+            padding-top: 20px;
+            div{
+                width: unset !important;
+                div{
+                    span:first-child{
+                        margin-right: 2em !important;
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    
+    .multiselectItems{
+        width: 100%;
+        .multiselect{
+            width: 100%;
+            background-color: white;
+        }
+        div{
+            span{
+                font-size: 14px;
+                margin: 2.5px;
+            }
+        }
+    }
+    div{
+        width: 100%;
+        margin-right: 10px;
+    }
+    div:nth-child(3){
+        width:100%;
+    }
+    input[type="number"]{
+        height: 48px;
+    }
+    input[readonly]{
+        background-color: white;
+    }
+    >span{
+        font-size: 20px;
+        display:flex;
+        align-items: center;
+        cursor: pointer;
+    }
+}
+
+.wrap{
+    button.addNewCondition{
+        background-color: transparent;
+        color: #1A78F2;
+        border: 1px solid #1A78F2;
+        font-size: 14px;
+    }
+    .headerAdditional{
+        h2{
+            text-align: left;
+        }
+    }
+}

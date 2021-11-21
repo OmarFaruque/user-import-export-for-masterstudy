@@ -1,0 +1,190 @@
+$label_color: #0F1A29;
+$light_gray: #999;
+$button_bg: #1A78F2;
+
+
+:global(#acotrs_shipping_ui_root) {
+  //@import 'reset';
+  * {
+    box-sizing: border-box;
+  }
+
+  >div.bgWhite{
+    padding-right: 10px;
+    background-color: white;
+    border-radius: 5px;
+    padding-bottom: 5rem;
+    position: relative;
+  }
+}
+
+
+:global(#acotrsSettingInfo #wrap .wrap-inner){
+      max-width: 600px;
+      background-color: white;
+      margin: 15px auto;
+      padding: 30px;
+      border-radius: 5px;
+
+      iframe{
+        width: 100%;
+      }
+}
+
+:global(div#multiselectContainerReact){
+  background-color: white;
+}
+
+
+
+.wrap{
+  width: 100%;
+  max-width: 650px;
+  margin: 50px auto;
+  label>span{
+    color: $light_gray;
+  }
+  label:not(.switch){
+    margin-top: 15px;
+    display: block;
+    color: $label_color;
+    font-size: 14px;
+  }
+  input{
+    line-height: 48px;
+  }
+
+  a.navlink{
+    margin: 40px auto;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+    display: block;
+    background-color: $button_bg;
+    border-width: 0;
+    border-radius: 5px;
+    padding: 16px 23px;
+    max-width: 100px;
+    text-decoration: none;
+  }
+
+  button{
+    margin: 40px auto;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+    display: block;
+    background-color: $button_bg;
+    border-width: 0;
+    border-radius: 5px;
+    padding: 12px 23px;
+    cursor: pointer;
+    &:disabled{
+      background-color: gray;
+    }
+  }
+  button>a{
+    text-decoration: none;
+    color: white;
+  }
+  button>a:focus{
+    box-shadow: none;
+  }
+}
+.header{
+  h2{
+    text-align: center;
+    font-size: 25px;
+  }
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  color: #bbb !important;
+  cursor: pointer;
+}
+
+.d_flex{
+  display: flex;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-top: 8px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.switch input:checked + .slider, 
+.switch input:checked + .form_group {
+  background-color: #2196F3;
+}
+
+.switch input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+  box-shadow: 1px 1px 0.1em #777;
+  -o-box-shadow: 1px 1px 0.1em #777;
+  -webkit-box-shadow: 1px 1px 0.1em #777;
+  -moz-box-shadow: 1px 1px 0.1em #777;
+}
+
+/* Rounded sliders */
+.slider {
+  border-radius: 34px;
+}
+
+.slider:before {
+  border-radius: 50%;
+}
+
+.ml_auto{
+  margin-left: auto;
+}
+.react_select input:focus{
+  box-shadow: none;
+}
+
+.text_center{
+  text-align: center;
+}

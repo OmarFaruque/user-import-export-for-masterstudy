@@ -1,0 +1,41 @@
+@import '../backend';
+.wrap .d_inline_block{
+    margin-top: 22px !important;
+    &.ml_1_5{
+        margin-left: 1.5rem;
+    }
+    div{
+        display: inline-block;
+        input{
+            line-height: unset;
+        }
+    }
+    strong{
+        margin-left: 5px;
+    }
+    input{
+        margin-top: 0;
+    }  
+}
+
+
+.note{
+    margin-left: 25px;
+    margin-top: 5px;
+    width: 100%;
+    >div{
+        width: 100%;
+        select{
+            width: 100%;
+        }
+    }
+    .multiselect{
+      div{
+          div{
+            span{
+                white-space: pre-wrap;
+            }
+          }
+      }
+    } 
+}

@@ -1,0 +1,14 @@
+@import '../backend';
+
+.multiselect{
+    &.error{
+        >div{
+            >div{
+                border-color: red;
+            }
+        }
+    }
+    input{
+        width: 100%;
+    }
+}
