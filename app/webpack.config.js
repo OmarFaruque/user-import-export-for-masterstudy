@@ -64,7 +64,7 @@ module: {
                 loader: 'babel-loader',
                 options: {
                     presets: ['@babel/preset-env', "@babel/preset-react"],
-                    "plugins": [
+                    plugins: [
                         ["@babel/plugin-proposal-class-properties"],
                         ["@wordpress/babel-plugin-makepot", { "output": "../languages/advanced-table-rate-shipping-for-woocommerce-en_US.po"}]
                     ]

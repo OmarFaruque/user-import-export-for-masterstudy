@@ -1,135 +1,117 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from "react"
+import {HashRouter, Route, Switch} from 'react-router-dom'
+import ReactDOM from "react-dom"
+import style from './backend.scss'
+import FetchWP from './utils/fetchWP'
+import CSVReader from 'react-csv-reader'
 
-import FetchWP from './utils/fetchWP';
-import Acoloader from './utils/acoloader';
-import Licence from './pages/Licence';
-import Methodlists from './pages/Methodlists'
 
+import Csvloader from './utils/csvloader'
 
 const { __ } = window.wp.i18n;
 
-class Backend extends React.Component {
+class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loader: true, 
-            instance_id: false, 
-            zone_id: false
+            loader: false,
+            saving: false,
+            config: {
+                general: {title: ''},
+                page2: {title: ''}
+            }, 
+            csv_data: false, 
+            type: 'single_choice_question', 
+            assets_url: window.uiemlms_object.assets_url, 
+            upload_complete: false
         }
 
         this.fetchWP = new FetchWP({
-            restURL: window.acotrs_object.root,
-            restNonce: window.acotrs_object.api_nonce,
+            restURL: window.uiemlms_object.root,
+            restNonce: window.uiemlms_object.api_nonce,
+
         });
-    }
-
-
-    /**
-     * React Ready event
-     */
-    componentDidMount() {
-        this.fetchData();
-    }
-
-
-    /**
-     * Get configaration from DB
-     */
-    getConfig(){
-        this.setState({
-            loader: true,
-        });
-      
-        const {config} = this.state;
         
-        this.fetchWP.get('initial_config/')
-            .then(
-                (json) => {
-                    this.setState({
-                            loader: false,
-                            licenced: json.licenced
-                        });   
-                })
-                .catch(function(error) {
-                    console.log('error', error);
-                });
+        this.onChangeHandler = this.onChangeHandler.bind(this);
+    }
+
+
+    onChangeHandler = (e) => {
+        this.setState({
+            type: e.target.value
+        });
+    }
+
+    csvUploadHandler = (data, fileInfo) => {
+        this.setState({
+            csv_data: data
+        })
+    }
+
+
+    componentDidMount() {}
+
+    componentWillUnmount() {}
+
+    handleUpdate = () => {
+        this.setState({
+            loader: true
+        });
+        const {csv_data} = this.state;
+        this.fetchWP.post('save', {data: csv_data}).then(json => {
+            
+            this.setState({
+                loader: false, 
+                upload_complete: true
+            });
+        }).catch(error => {
+            // alert("Some thing went wrong");
+            console.log(error);
+        })
     }
 
 
 
-    /**
-     * Get Configaration And User role from DB
-     */
-    fetchData() {
-        this.getConfig();
-    }
+    render() {
+        const {config, upload_complete} = this.state;
+        return (
+            <div>
+                {this.state.loader ? <Csvloader /> : null}
 
+                <div className={style.test_class}>
+                    {/* Left Part */}
+                <div>
+                        
+                        <label>{__('Select a CSV file','learnpress-import-csv')}</label>
 
+                        <div className={style.uploader}>
+                            <CSVReader onFileLoaded={this.csvUploadHandler} />
+                        </div>
+                        {
+                            upload_complete ? <div className={style.msgS}>
+                                <span>{__('CSV upload complete.', 'learnpress-import-csv')}</span>
+                            </div> : null
+                        }
+                        <button onClick={this.handleUpdate}>{__('Process  CSV', 'learnpress-import-csv')}</button>
 
+                </div>
 
-    /**
-     * 
-     * @param {default event} e 
-     * Set Licence Key
-     */
-    setLicenceKey = (e) => {
-        this.setState(
-            {
-                licence_key: e.target.value
-            }
+                {/* Right Part */}
+                <div>
+                        <div className={style.right_inner}>
+                            <a href={this.state.assets_url + '/csv/demo.csv'} download >{__('Download CSV Sample', 'learnpress-import-csv')}</a>
+                        </div>
+                </div>
+                </div>
+
+            </div>
         )
     }
 
-
-    /**
-     * 
-     * @param {default} e 
-     * Save Licence key to DB
-     */
-    saveLicenceKey = (e) => {
-        e.preventDefault();
-        let data = {
-            licence_key : this.state.licence_key
-        }
-        this.fetchWP.post('update_licence_key/', data)
-        .then(
-            (json) => {
-                this.setState(
-                    {
-                        licenced: json.licenced, 
-                        error_msg: json.msg
-                    }
-                )
-            }
-        );    
-    }
-
-
-    /**
-     * Render main component
-     */
-    render() {
-        const {licenced, error_msg, zone_id} = this.state;
-
-        if(typeof licenced == 'undefined'){
-            return(
-                <Acoloader />
-            )
-        }
-        
-
-        if(typeof licenced != 'undefined' && !licenced){
-            return(
-                <Licence setLicenceKey={this.setLicenceKey} error_msg={error_msg} licence_key={this.state.licence_key} saveLicenceKey={this.saveLicenceKey} />
-            )
-        } 
-
-        return <Methodlists />
-    }
 }
 
-if (document.getElementById("acotrs_ui_root")) {
-    ReactDOM.render(<Backend/>, document.getElementById("acotrs_ui_root"));
+
+if (document.getElementById("uiemlms_ui_root")) {
+    ReactDOM.render(<App/>, document.getElementById("uiemlms_ui_root"));
 }
 
