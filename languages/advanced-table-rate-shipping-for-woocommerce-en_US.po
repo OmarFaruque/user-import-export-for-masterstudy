@@ -3,18 +3,22 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: src/backend.js:102
+#: src/backend.js:104
+msgid "Download CSV File:"
+msgstr ""
+
+#: src/backend.js:105
 msgid "Download CSV Sample"
 msgstr ""
 
-#: src/backend.js:85
+#: src/backend.js:87
 msgid "Select a CSV file"
 msgstr ""
 
-#: src/backend.js:92
+#: src/backend.js:94
 msgid "CSV upload complete."
 msgstr ""
 
-#: src/backend.js:95
+#: src/backend.js:97
 msgid "Process  CSV"
 msgstr ""

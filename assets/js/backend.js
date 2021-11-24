@@ -158,7 +158,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"bgWhite":"acotrs_bgWhiteJnnas"});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"bgWhite":"uiemlms_bgWhiteJnnas","test_class":"uiemlms_test_classwEAXV","right_inner":"uiemlms_right_innermIkVm","form_froup":"uiemlms_form_frouplAPZn","msgS":"uiemlms_msgSoGnT0","uploader":"uiemlms_uploadertXIqB"});
 
 /***/ }),
 
@@ -174,7 +174,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 // extracted by mini-css-extract-plugin
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"loader":"acotrs_loaderGBUlO"});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"loader":"uiemlms_loaderGBUlO"});
 
 /***/ }),
 
@@ -32893,13 +32893,14 @@ var App = /*#__PURE__*/function (_React$Component) {
       _this.fetchWP.post('save', {
         data: csv_data
       }).then(function (json) {
+        console.log('after success: ', json);
+
         _this.setState({
           loader: false,
           upload_complete: true
         });
       })["catch"](function (error) {
-        // alert("Some thing went wrong");
-        console.log(error);
+        console.log('error is: ', error);
       });
     });
 
@@ -32939,22 +32940,24 @@ var App = /*#__PURE__*/function (_React$Component) {
       var _this$state = this.state,
           config = _this$state.config,
           upload_complete = _this$state.upload_complete;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.loader ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_utils_csvloader__WEBPACK_IMPORTED_MODULE_5__["default"], null) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: _backend_scss__WEBPACK_IMPORTED_MODULE_2__["default"].bgWhite
+      }, this.state.loader ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_utils_csvloader__WEBPACK_IMPORTED_MODULE_5__["default"], null) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: _backend_scss__WEBPACK_IMPORTED_MODULE_2__["default"].test_class
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, __('Select a CSV file', 'learnpress-import-csv')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, __('Select a CSV file', 'user-import-export-mlms')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: _backend_scss__WEBPACK_IMPORTED_MODULE_2__["default"].uploader
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_csv_reader__WEBPACK_IMPORTED_MODULE_4___default()), {
         onFileLoaded: this.csvUploadHandler
       })), upload_complete ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: _backend_scss__WEBPACK_IMPORTED_MODULE_2__["default"].msgS
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", null, __('CSV upload complete.', 'learnpress-import-csv'))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", null, __('CSV upload complete.', 'user-import-export-mlms'))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
         onClick: this.handleUpdate
-      }, __('Process  CSV', 'learnpress-import-csv'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, __('Process  CSV', 'user-import-export-mlms'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: _backend_scss__WEBPACK_IMPORTED_MODULE_2__["default"].right_inner
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
-        href: this.state.assets_url + '/csv/demo.csv',
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, __('Download CSV File:', 'user-import-export-mlms')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+        href: this.state.assets_url + '/csv/msstudy-import-export-template.csv',
         download: true
-      }, __('Download CSV Sample', 'learnpress-import-csv'))))));
+      }, __('Download CSV Sample', 'user-import-export-mlms'))))));
     }
   }]);
 

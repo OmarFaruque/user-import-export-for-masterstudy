@@ -146,12 +146,12 @@ class UIEMLMS_Backend
      */
     public function uiemlsms_is_masterstudy_activated()
     {
-        if (in_array('learnpress/learnpress.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+        if (in_array('masterstudy-lms-learning-management-system/masterstudy-lms-learning-management-system.php', apply_filters('active_plugins', get_option('active_plugins')))) {
             return true;
         }
         if (is_multisite()) {
             $plugins = get_site_option('active_sitewide_plugins');
-            if (isset($plugins['learnpress/learnpress.php'])) {
+            if (isset($plugins['masterstudy-lms-learning-management-system/masterstudy-lms-learning-management-system.php'])) {
                 return true;
             }
         }
@@ -187,7 +187,7 @@ class UIEMLMS_Backend
     {
         $action_links = array(
             'settings' => '<a href="' . admin_url('admin.php?page=' . $this->token . '-admin-ui/') . '">'
-                . __('Configure', 'learnpress-import-csv') . '</a>'
+                . __('Configure', 'user-import-export-mlms') . '</a>'
         );
 
         return array_merge($action_links, $links);
@@ -254,7 +254,7 @@ class UIEMLMS_Backend
 
         echo (
             '<div id="' . $this->token . '_ui_root">
-                <div class="' . $this->token . '_loader"><p>' . __('Loading User Interface...', 'learnpress-import-csv') . '</p></div>
+                <div class="' . $this->token . '_loader"><p>' . __('Loading User Interface...', 'user-import-export-mlms') . '</p></div>
             </div>'
         );
     }

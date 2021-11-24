@@ -72,5 +72,5 @@ if (is_admin()) {
 /**
  * API
  */
-// new UIEMLMS_Api();
+new UIEMLMS_Api();
 

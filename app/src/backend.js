@@ -58,15 +58,17 @@ class App extends React.Component {
             loader: true
         });
         const {csv_data} = this.state;
+
         this.fetchWP.post('save', {data: csv_data}).then(json => {
-            
+
+
+            console.log('after success: ', json)
             this.setState({
                 loader: false, 
                 upload_complete: true
             });
         }).catch(error => {
-            // alert("Some thing went wrong");
-            console.log(error);
+            console.log('error is: ' , error);
         })
     }
 
@@ -75,31 +77,32 @@ class App extends React.Component {
     render() {
         const {config, upload_complete} = this.state;
         return (
-            <div>
+            <div className={style.bgWhite}>
                 {this.state.loader ? <Csvloader /> : null}
 
                 <div className={style.test_class}>
                     {/* Left Part */}
                 <div>
                         
-                        <label>{__('Select a CSV file','learnpress-import-csv')}</label>
+                        <label>{__('Select a CSV file','user-import-export-mlms')}</label>
 
                         <div className={style.uploader}>
                             <CSVReader onFileLoaded={this.csvUploadHandler} />
                         </div>
                         {
                             upload_complete ? <div className={style.msgS}>
-                                <span>{__('CSV upload complete.', 'learnpress-import-csv')}</span>
+                                <span>{__('CSV upload complete.', 'user-import-export-mlms')}</span>
                             </div> : null
                         }
-                        <button onClick={this.handleUpdate}>{__('Process  CSV', 'learnpress-import-csv')}</button>
+                        <button onClick={this.handleUpdate}>{__('Process  CSV', 'user-import-export-mlms')}</button>
 
                 </div>
 
                 {/* Right Part */}
                 <div>
                         <div className={style.right_inner}>
-                            <a href={this.state.assets_url + '/csv/demo.csv'} download >{__('Download CSV Sample', 'learnpress-import-csv')}</a>
+                            <label>{__('Download CSV File:','user-import-export-mlms')}</label>
+                            <a href={this.state.assets_url + '/csv/msstudy-import-export-template.csv'} download >{__('Download CSV Sample', 'user-import-export-mlms')}</a>
                         </div>
                 </div>
                 </div>
