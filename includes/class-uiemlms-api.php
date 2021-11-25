@@ -93,15 +93,31 @@ class UIEMLMS_Api
         $usermeta = get_user_meta( 3 );
 
         // $usermeta = get_user_meta( 3, 'submission_history', true);
-        // echo 'user metas <br/><pre>';
-        // print_r($usermeta);
-        // echo '</pre>';
+
+        $postmea = get_post_meta( 2280 );
+
+        $courses = STM_LMS_Curriculum::get_items_by_item(2286, array('course_id'));
+
+        if(!empty($courses)){
+            $courses = wp_list_pluck($courses, 'course_id');
+        }
+
+        
+        /*Get Courses where item included in curriculum*/
+        $user_course = STM_LMS_Helpers::simplify_db_array(stm_lms_get_user_course(3, 2280, array(), $enterprise = ''));
+
+        if(count($user_course) <= 0){
+            echo 'it is empty <br/>';
+        }
+
+        echo 'user metas <br/><pre>';
+        print_r($user_course);
+        echo '</pre>';
+        
+        $typeof = 'Completed';
         
 
-        $getUser = new WP_User(1);
-        echo 'get Usrs <br/><pre>';
-        print_r($getUser->data->user_login);
-        echo '</pre>';
+        
 
         // retrieve_password($getUser->data->user_login);
         
@@ -229,18 +245,78 @@ class UIEMLMS_Api
                     update_user_meta( $user_id, 'submission_history', $submission_history );
                 }
 
+            }   
 
-                // Send reset password mail 
-                if(!empty($reset_link) && strtolower($reset_link) == 'yes')
-                    retrieve_password($user->data->user_login);
-                
-                
+            // Send reset password mail 
+            if(!empty($reset_link) && strtolower($reset_link) == 'yes')
+                retrieve_password($user->data->user_login);
+            
+            //Enroll from student profile    
 
+        	// $course = compact('user_id', 'course_id', 'current_lesson_id', 'end_time');
+            if(!empty($course_ids)){
+
+                //Course Progress
+                if(!empty($corse_progress)){
+                    if(strtolower($corse_progress) == 'completed')
+                        $corse_progress = 100;
+                }
+
+                $course_ids = explode('-', $course_ids);
+                foreach($course_ids as $sid){
+                    $course = array(
+                        'user_id' => $user_id, 
+                        'status' => 'enrolled', 
+                        'progress_percent' => !empty($corse_progress) ? $corse_progress : 0, 
+                        'start_time' => !empty($date_of_enrollment) ? strtotime($date_of_enrollment) : time(), 
+                        'enterprise_id' => 0, 
+                        'bundle_id' => 0, 
+                        'instructor_id' => 0,
+                        'end_time' => 0,
+                        'current_lesson_id' => 0, 
+                        'course_id' => $sid
+                    );
+    
+                    if (function_exists('wpml_get_language_information')) {
+                        $post_language_information = wpml_get_language_information(null, $sid);
+                        $course['lng_code'] = $post_language_information['locale'];
+                    } else {
+                        $course['lng_code'] = get_locale();
+                    }
+    
+                    stm_lms_add_user_course($course);
+                }
+
+                // Completed lesson id
+                $lesson_ids = explode(',', $complete_lesson_id);
+
+                
+                foreach($lesson_ids as $slesson){
+
+                    $enroll_courses = STM_LMS_Curriculum::get_items_by_item($slesson, array('course_id'));
+
+                    if(!empty($enroll_courses)){
+                        $enroll_courses = wp_list_pluck($enroll_courses, 'course_id');
+                        foreach($enroll_courses as $sCourseid){
+                            $user_course = STM_LMS_Helpers::simplify_db_array(stm_lms_get_user_course($user_id, $sCourseid, array(), $enterprise = ''));
+                        }
+
+                        
+                    }
+
+
+                    $lessonData = array(
+                        'user_id' => $user_id
+
+                    );
+                }
+                stm_lms_add_user_lesson(compact('user_id', 'course_id', 'lesson_id', 'start_time', 'end_time'));
             }
 
 
+            
 
-                    
+
         endforeach;
 
         return $data;
