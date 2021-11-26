@@ -86,40 +86,74 @@ class UIEMLMS_Api
         
         // $usermeta = get_user_meta( 3, 'become_instructor', true );
         
-        $usermeta = get_user_meta( 3, 'submission_date', true );
-        echo 'submission date: ' . $usermeta . '<br/>';
+        // $usermeta = get_user_meta( 3, 'submission_date', true );
+        // echo 'submission date: ' . $usermeta . '<br/>';
 
-        echo 'display date: ' . date('M d, Y - h:i', $usermeta) . '<br/>';
-        $usermeta = get_user_meta( 3 );
+        // echo 'display date: ' . date('M d, Y - h:i', $usermeta) . '<br/>';
+        // $usermeta = get_user_meta( 3 );
 
-        // $usermeta = get_user_meta( 3, 'submission_history', true);
+        // // $usermeta = get_user_meta( 3, 'submission_history', true);
 
-        $postmea = get_post_meta( 2280 );
+        // $postmea = get_post_meta( 2280 );
 
-        $courses = STM_LMS_Curriculum::get_items_by_item(2286, array('course_id'));
+        // $courses = STM_LMS_Curriculum::get_items_by_item(2286, array('course_id'));
 
-        if(!empty($courses)){
-            $courses = wp_list_pluck($courses, 'course_id');
-        }
+        // if(!empty($courses)){
+        //     $courses = wp_list_pluck($courses, 'course_id');
+        // }
 
         
-        /*Get Courses where item included in curriculum*/
-        $user_course = STM_LMS_Helpers::simplify_db_array(stm_lms_get_user_course(3, 2280, array(), $enterprise = ''));
+        // /*Get Courses where item included in curriculum*/
+        // $slesson = 2281;
+        // $user_id = 2;
+        // $enroll_courses = STM_LMS_Curriculum::get_items_by_item($slesson, array('course_id'));
 
-        if(count($user_course) <= 0){
-            echo 'it is empty <br/>';
-        }
+        // if(!empty($enroll_courses)){
+        //     $enroll_courses = wp_list_pluck($enroll_courses, 'course_id');
+        //     foreach($enroll_courses as $sCourseid){
+        //         $user_course = STM_LMS_Helpers::simplify_db_array(stm_lms_get_user_course($user_id, $sCourseid, array(), $enterprise = ''));
+        //         // $user_course = array_map(function($v){
+        //         //     return $v['user_id'];
+        //         // }, $user_course);
+        //         echo 'user course <br/><pre>';
+        //         print_r($user_course);
+        //         echo '</pre>';
+        //     }
 
-        echo 'user metas <br/><pre>';
-        print_r($user_course);
-        echo '</pre>';
+            
+        // }
+
+       
         
-        $typeof = 'Completed';
+        // $typeof = 'Completed';
         
 
         
 
         // retrieve_password($getUser->data->user_login);
+        
+        $user_id = 3;
+        $cart_items = stm_lms_get_cart_items($user_id, apply_filters('stm_lms_cart_items_fields', array('item_id', 'price')));
+        echo 'cart items <br/><pre>';
+        print_r($cart_items);
+        echo '</pre>';
+
+        $price = get_post_meta( 2336 );
+        echo 'metas <br/><pre>';
+        print_r($price);
+        echo '</pre>';
+
+        echo 'payment method code is: ' . get_option( 'pyment_m' ) . '<br/>';
+
+        // $cart_items = '';
+
+        // $invoice = STM_LMS_Order::create_order([
+        //     "user_id" => $user_id,
+        //     "cart_items" => $cart_items,
+        //     "payment_code" => $payment_code,
+        //     "_order_total" => $cart_total['total'],
+        //     "_order_currency" => $symbol
+        // ], true);
         
         
     }
@@ -255,12 +289,16 @@ class UIEMLMS_Api
 
         	// $course = compact('user_id', 'course_id', 'current_lesson_id', 'end_time');
             if(!empty($course_ids)){
-
+                $cart_items = array();
                 //Course Progress
                 if(!empty($corse_progress)){
                     if(strtolower($corse_progress) == 'completed')
                         $corse_progress = 100;
                 }
+
+                //Progress reset
+                if(!empty($reset_progress) && 'yes' == strtolower($reset_progress))
+                    $corse_progress = 0;
 
                 $course_ids = explode('-', $course_ids);
                 foreach($course_ids as $sid){
@@ -285,6 +323,14 @@ class UIEMLMS_Api
                     }
     
                     stm_lms_add_user_course($course);
+
+                    $itemPrice = get_post_meta( 2280, 'sale_price', true ) ? get_post_meta( $sid, 'sale_price', true ) : get_post_meta( $sid, 'price', true );
+                    if($itemPrice > 0){
+                        $cart_items[] = array(
+                            'item_id' => $sid,
+                            'price' => get_post_meta( 2280, 'sale_price', true ) ? get_post_meta( $sid, 'sale_price', true ) : get_post_meta( $sid, 'price', true )
+                        );
+                    }
                 }
 
                 // Completed lesson id
@@ -299,23 +345,43 @@ class UIEMLMS_Api
                         $enroll_courses = wp_list_pluck($enroll_courses, 'course_id');
                         foreach($enroll_courses as $sCourseid){
                             $user_course = STM_LMS_Helpers::simplify_db_array(stm_lms_get_user_course($user_id, $sCourseid, array(), $enterprise = ''));
+                            if(is_array($user_course) && isset($user_course['user_id']) && $user_id == $user_course['user_id']){
+                                $lessonData = array(
+                                    'user_id' => $user_id, 
+                                    'course_id' => $user_course['course_id'], 
+                                    'lesson_id' => $slesson, 
+                                    'start_time' => time(), 
+                                    'end_time' => time()
+                                );
+                                stm_lms_add_user_lesson($lessonData);
+                            }
+                            
                         }
-
                         
                     }
-
-
-                    $lessonData = array(
-                        'user_id' => $user_id
-
-                    );
+                    
                 }
-                stm_lms_add_user_lesson(compact('user_id', 'course_id', 'lesson_id', 'start_time', 'end_time'));
+
+
+                /*Create ORDER*/
+                if(count($cart_items) > 0){
+                    $payment_code = 'cash';
+                    $cart_total = STM_LMS_Cart::get_cart_totals($cart_items);
+                    $symbol = STM_LMS_Options::get_option('currency_symbol', 'none');
+
+                    $invoice = STM_LMS_Order::create_order([
+                        "user_id" => $user_id,
+                        "cart_items" => $cart_items,
+                        "payment_code" => $payment_code,
+                        "_order_total" => $cart_total['total'],
+                        "_order_currency" => $symbol
+                    ], true);
+                    $order_status = !empty($order_status) ? strtolower($order_status) : 'pending';
+                    $order_date = strtotime($order_date);
+                    update_post_meta( $invoice, 'status', $order_status );
+                    update_post_meta( $invoice, 'date', $order_date );
+                }
             }
-
-
-            
-
 
         endforeach;
 
