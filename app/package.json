@@ -23,9 +23,11 @@
     "@wordpress/i18n": "^4.2.4",
     "dotenv": "^10.0.0",
     "react": "^17.0.2",
+    "react-csv-downloader": "^2.7.0",
     "react-csv-reader": "^3.4.0",
     "react-loader-spinner": "^4.0.0",
     "react-router-dom": "^6.0.2",
+    "react-tooltip": "^4.2.21",
     "sass-resources-loader": "^2.2.4"
   },
   "devDependencies": {

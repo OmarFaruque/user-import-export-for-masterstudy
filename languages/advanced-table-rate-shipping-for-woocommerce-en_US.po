@@ -3,22 +3,134 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: src/backend.js:104
-msgid "Download CSV File:"
+#: src/backend.js:101
+msgid "Reset Progress"
 msgstr ""
 
 #: src/backend.js:105
-msgid "Download CSV Sample"
+msgid "Address"
 msgstr ""
 
-#: src/backend.js:87
+#: src/backend.js:109
+msgid "Organization"
+msgstr ""
+
+#: src/backend.js:113
+msgid "Contact Number"
+msgstr ""
+
+#: src/backend.js:117
+msgid "Order By"
+msgstr ""
+
+#: src/backend.js:121
+msgid "Order No"
+msgstr ""
+
+#: src/backend.js:125
+msgid "Order Key"
+msgstr ""
+
+#: src/backend.js:129
+msgid "Order Status"
+msgstr ""
+
+#: src/backend.js:133
+msgid "Order Date"
+msgstr ""
+
+#: src/backend.js:213
 msgid "Select a CSV file"
 msgstr ""
 
-#: src/backend.js:94
+#: src/backend.js:220
 msgid "CSV upload complete."
 msgstr ""
 
-#: src/backend.js:97
+#: src/backend.js:223
 msgid "Process  CSV"
+msgstr ""
+
+#: src/backend.js:231
+msgid "Export User Data as CSV:"
+msgstr ""
+
+#: src/backend.js:241
+msgid "Export to CSV"
+msgstr ""
+
+#: src/backend.js:244
+msgid "Table row export to CSV."
+msgstr ""
+
+#: src/backend.js:253
+msgid "Download CSV Demo File:"
+msgstr ""
+
+#: src/backend.js:254
+msgid "Download CSV Sample"
+msgstr ""
+
+#: src/backend.js:33
+msgid "User ID"
+msgstr ""
+
+#: src/backend.js:37
+msgid "Username"
+msgstr ""
+
+#: src/backend.js:41
+msgid "Email"
+msgstr ""
+
+#: src/backend.js:45
+msgid "Role"
+msgstr ""
+
+#: src/backend.js:49
+msgid "First Name"
+msgstr ""
+
+#: src/backend.js:53
+msgid "Last Name"
+msgstr ""
+
+#: src/backend.js:57
+msgid "Degree"
+msgstr ""
+
+#: src/backend.js:61
+msgid "Expertise"
+msgstr ""
+
+#: src/backend.js:65
+msgid "Submission Date"
+msgstr ""
+
+#: src/backend.js:69
+msgid "Answer Date"
+msgstr ""
+
+#: src/backend.js:73
+msgid "Message"
+msgstr ""
+
+#: src/backend.js:77
+msgid "Password"
+msgstr ""
+
+#: src/backend.js:81
+msgid "Send Password Reset Link"
+msgstr ""
+
+#: src/backend.js:85
+msgid "Course ID"
+msgstr ""
+
+#: src/backend.js:89
+msgid "Date of Enrollment"
+msgstr ""
+
+#: src/backend.js:97
+msgid "Course Progress"
 msgstr ""

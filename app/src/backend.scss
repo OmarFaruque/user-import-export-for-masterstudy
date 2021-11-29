@@ -13,7 +13,6 @@ $button_bg: #1A78F2;
   >div.bgWhite{
     background-color: white;
     border-radius: 5px;
-    padding-bottom: 5rem;
     position: relative;
     max-width: 100%;
     .test_class{
@@ -25,12 +24,25 @@ $button_bg: #1A78F2;
         flex: 1
       }
       .right_inner{
+        button{
+          background-color: white;  
+          border: 1px solid #00a0d2;
+          color: #00a0d2;
+          margin: 10px 0;
+          span{
+            margin-right: 10px;
+          }
+          &:hover{
+            background-color: #00a0d2;
+            color: white;
+          }
+        }
        a{
           display: block;
           text-decoration: none;
           padding: 10px;
           margin: 13px 0;
-          border: 1px solid #5b9dd9;
+          border: 1px solid #00a0d2;
           max-width: 300px;
           border-radius: 5px;
           color: black;
