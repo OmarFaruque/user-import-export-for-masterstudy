@@ -55,19 +55,19 @@ msgstr ""
 msgid "Export User Data as CSV:"
 msgstr ""
 
-#: src/backend.js:241
+#: src/backend.js:242
 msgid "Export to CSV"
 msgstr ""
 
-#: src/backend.js:244
+#: src/backend.js:245
 msgid "Table row export to CSV."
 msgstr ""
 
-#: src/backend.js:253
+#: src/backend.js:254
 msgid "Download CSV Demo File:"
 msgstr ""
 
-#: src/backend.js:254
+#: src/backend.js:257
 msgid "Download CSV Sample"
 msgstr ""
 

@@ -237,7 +237,8 @@ class App extends React.Component {
                                 wrapColumnChar=""
                                 columns={this.state.csv_columns}
                                 >
-                                <button className={style.export} data-tip data-for="exporttoCSVTip" onClick={ (e)=>{e.preventDefault()} }><span className={style.svgIcon + " dashicons dashicons-database-export"}></span>
+                                <button className={style.export} data-tip data-for="exporttoCSVTip" onClick={ (e)=>{e.preventDefault()} }>
+                                    <span className={style.svgIcon + " dashicons dashicons-database-export"}></span>
                                 {__('Export to CSV', 'user-import-export-mlms')}
                                 </button>
                                 <ReactTooltip id="exporttoCSVTip" place="top" effect="solid">
@@ -251,7 +252,10 @@ class App extends React.Component {
                 <div>
                         <div className={style.right_inner}>
                             <label>{__('Download CSV Demo File:','user-import-export-mlms')}</label>
-                            <a href={this.state.assets_url + '/csv/msstudy-import-export-template.csv'} download >{__('Download CSV Sample', 'user-import-export-mlms')}</a>
+                            <a href={this.state.assets_url + '/csv/msstudy-import-export-template.csv'} download >
+                                <span className={style.svgIcon + " dashicons dashicons-database-import"}></span>
+                                {__('Download CSV Sample', 'user-import-export-mlms')}
+                            </a>
                         </div>
                 </div>
                 </div>

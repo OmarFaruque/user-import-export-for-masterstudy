@@ -44,13 +44,16 @@ $button_bg: #1A78F2;
           margin: 13px 0;
           border: 1px solid #00a0d2;
           max-width: 300px;
+          color: #00a0d2;;
           border-radius: 5px;
-          color: black;
           text-align: center;
+          span{
+            margin-right: 10px;
+          }
        }   
        a:hover{
          color: white;
-         background-color: #5b9dd9;
+         background-color: #00a0d2;
        }
       }
       
