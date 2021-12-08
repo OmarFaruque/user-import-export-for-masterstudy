@@ -3,134 +3,134 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: src/backend.js:101
+#: src/backend.js:102
 msgid "Reset Progress"
 msgstr ""
 
-#: src/backend.js:105
+#: src/backend.js:106
 msgid "Address"
 msgstr ""
 
-#: src/backend.js:109
+#: src/backend.js:110
 msgid "Organization"
 msgstr ""
 
-#: src/backend.js:113
+#: src/backend.js:114
 msgid "Contact Number"
 msgstr ""
 
-#: src/backend.js:117
+#: src/backend.js:118
 msgid "Order By"
 msgstr ""
 
-#: src/backend.js:121
+#: src/backend.js:122
 msgid "Order No"
 msgstr ""
 
-#: src/backend.js:125
+#: src/backend.js:126
 msgid "Order Key"
 msgstr ""
 
-#: src/backend.js:129
+#: src/backend.js:130
 msgid "Order Status"
 msgstr ""
 
-#: src/backend.js:133
+#: src/backend.js:134
 msgid "Order Date"
 msgstr ""
 
-#: src/backend.js:213
+#: src/backend.js:238
 msgid "Select a CSV file"
 msgstr ""
 
-#: src/backend.js:220
+#: src/backend.js:245
 msgid "CSV upload complete."
 msgstr ""
 
-#: src/backend.js:223
+#: src/backend.js:248
 msgid "Process  CSV"
 msgstr ""
 
-#: src/backend.js:231
+#: src/backend.js:256
 msgid "Export User Data as CSV:"
 msgstr ""
 
-#: src/backend.js:242
+#: src/backend.js:267
 msgid "Export to CSV"
 msgstr ""
 
-#: src/backend.js:245
+#: src/backend.js:270
 msgid "Table row export to CSV."
 msgstr ""
 
-#: src/backend.js:254
+#: src/backend.js:279
 msgid "Download CSV Demo File:"
 msgstr ""
 
-#: src/backend.js:257
+#: src/backend.js:282
 msgid "Download CSV Sample"
 msgstr ""
 
-#: src/backend.js:33
+#: src/backend.js:34
 msgid "User ID"
 msgstr ""
 
-#: src/backend.js:37
+#: src/backend.js:38
 msgid "Username"
 msgstr ""
 
-#: src/backend.js:41
+#: src/backend.js:42
 msgid "Email"
 msgstr ""
 
-#: src/backend.js:45
+#: src/backend.js:46
 msgid "Role"
 msgstr ""
 
-#: src/backend.js:49
+#: src/backend.js:50
 msgid "First Name"
 msgstr ""
 
-#: src/backend.js:53
+#: src/backend.js:54
 msgid "Last Name"
 msgstr ""
 
-#: src/backend.js:57
+#: src/backend.js:58
 msgid "Degree"
 msgstr ""
 
-#: src/backend.js:61
+#: src/backend.js:62
 msgid "Expertise"
 msgstr ""
 
-#: src/backend.js:65
+#: src/backend.js:66
 msgid "Submission Date"
 msgstr ""
 
-#: src/backend.js:69
+#: src/backend.js:70
 msgid "Answer Date"
 msgstr ""
 
-#: src/backend.js:73
+#: src/backend.js:74
 msgid "Message"
 msgstr ""
 
-#: src/backend.js:77
+#: src/backend.js:78
 msgid "Password"
 msgstr ""
 
-#: src/backend.js:81
+#: src/backend.js:82
 msgid "Send Password Reset Link"
 msgstr ""
 
-#: src/backend.js:85
+#: src/backend.js:86
 msgid "Course ID"
 msgstr ""
 
-#: src/backend.js:89
+#: src/backend.js:90
 msgid "Date of Enrollment"
 msgstr ""
 
-#: src/backend.js:97
+#: src/backend.js:98
 msgid "Course Progress"
 msgstr ""

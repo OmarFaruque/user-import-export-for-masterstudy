@@ -186,7 +186,7 @@ class UIEMLMS_Backend
     public function pluginActionLinks($links)
     {
         $action_links = array(
-            'settings' => '<a href="' . admin_url('admin.php?page=' . $this->token . '-admin-ui/') . '">'
+            'settings' => '<a href="' . admin_url('tools.php?page=' . $this->token . '-settings') . '">'
                 . __('Configure', 'user-import-export-mlms') . '</a>'
         );
 

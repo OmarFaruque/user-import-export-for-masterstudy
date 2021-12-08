@@ -47,7 +47,6 @@ class UIEMLMS_Api
         $this->wpdb = $wpdb;
         $this->token = UIEMLMS_TOKEN;
 
-        add_action( 'wp_head', array($this, 'testF') );
 
         add_action(
             'rest_api_init',
@@ -80,29 +79,10 @@ class UIEMLMS_Api
     }
 
 
-
-    public function testF(){
-       
-        
-      
-        
-
-       
-        
-        echo 'metas <br/><pre>';
-        // print_r($users);
-        print_r( get_option( 'testoption') );
-        echo '</pre>';
-
-        
-       
-     
-       
-        
-    }
-
-
-
+    /**
+     * GEt user data for export csv
+     * @access public
+     */
     public function uiemlms_get_user_data(){
         $users = get_users(  );
 
@@ -194,8 +174,11 @@ class UIEMLMS_Api
     public function uiemlms_save_csv($data){
         $array = $data['data'];
         array_shift($array);
-        $this->process_csv_data($array);
-        return new WP_REST_Response('success', 200);
+        $csv_import = $this->process_csv_data($array);
+        return new WP_REST_Response(array(
+            'msg' => 'success',
+            'errors' => $csv_import
+        ), 200);
     }
 
 
@@ -207,12 +190,36 @@ class UIEMLMS_Api
     public function process_csv_data($data = array()){
        
         
-        foreach($data as $sdata):
-            if(isset($sdata[2]) && !empty($sdata[2])):
-                update_option( 'testoption', $sdata );
-            $user_name          = $sdata[1];
-            $email              = $sdata[2];
-            $role               = strtolower($sdata[3]);
+        $error_msg = array();
+        foreach($data as $index => $sdata):
+                // update_option( 'testoption', $sdata );
+            $user_name          = $sdata[1]; // Required
+            $email              = $sdata[2]; // Required
+            $role               = strtolower($sdata[3]); // Required
+
+            //Skip if required field are emtpty
+            if(empty($user_name)){
+                $error_msg[] = sprintf( __('%s. Username are required.', 'user-import-export-mlms'), $index);
+                continue;
+            }
+            
+            if(empty($email) || $email == ''){
+                $error_msg[] = sprintf( __('%s. Email are required.', 'user-import-export-mlms'), $index);
+                continue;
+            }
+            
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                $error_msg[] = sprintf( __('%s. Email aren\'t valid.', 'user-import-export-mlms'), $index);
+                continue;
+            }
+
+            if(empty($role)){
+                $error_msg[] = sprintf( __('%s. Role are required.', 'user-import-export-mlms'), $index);
+                continue;
+            }
+                
+
+
             $first_name         = $sdata[4]; 
             $last_name          = $sdata[5];
             $degree             = $sdata[6];
@@ -224,7 +231,7 @@ class UIEMLMS_Api
             $reset_link         = $sdata[12];
             $course_ids         = $sdata[13];
             $date_of_enrollment = $sdata[14];
-            $corse_progress     = $sdata[15];
+            $corse_progress     = str_replace(' ', '', $sdata[15]);
             $complete_lesson_id = $sdata[16];
             $reset_progress     = $sdata[17];
             $address            = $sdata[18];
@@ -264,12 +271,14 @@ class UIEMLMS_Api
                     $password, 
                     $email 
                 );
+                wp_send_new_user_notifications( $user_id, 'user' );
             }
 
             $user = new WP_User( $user_id );
 
             // Add role
-            $user->add_role( $role );
+            if($role != 'stm_lms_instructor')
+                $user->add_role( $role );
 
             // First Name 
             update_user_meta( $user_id, 'first_name', $first_name );
@@ -279,7 +288,14 @@ class UIEMLMS_Api
 
             
             //become instructor
-            if($role == 'instructor'){
+            if($role == 'stm_lms_instructor'){
+                // Remove role
+                $user->remove_role( 'subscriber' );
+                
+                // Add role
+                $user->add_role( $role );
+                
+
                 $become_instructor = array(
                     'become_instructor' => true, 
                     'fields_type' => 'default',
@@ -307,6 +323,7 @@ class UIEMLMS_Api
                         'viewed' => ''
                     );
                     update_user_meta( $user_id, 'submission_history', $submission_history );
+                    update_user_meta( $user_id, 'submission_status', 'approved' );
                 }
 
             }   
@@ -316,15 +333,13 @@ class UIEMLMS_Api
                 retrieve_password($user->data->user_login);
             
             //Enroll from student profile    
-
-        	// $course = compact('user_id', 'course_id', 'current_lesson_id', 'end_time');
             if(!empty($course_ids)){
                 $cart_items = array();
                 //Course Progress
-                if(!empty($corse_progress)){
-                    if(strtolower($corse_progress) == 'completed')
-                        $corse_progress = 100;
-                }
+                
+                if(strtolower($corse_progress) == 'completed')
+                    $corse_progress = 100;
+                
 
                 //Progress reset
                 if(!empty($reset_progress) && 'yes' == strtolower($reset_progress))
@@ -332,6 +347,15 @@ class UIEMLMS_Api
 
                 $course_ids = explode('-', $course_ids);
                 foreach($course_ids as $sid){
+                    if($role == 'stm_lms_instructor'){
+                        $arg = array(
+                            'ID' => $sid,
+                            'post_author' => $user_id,
+                        );
+                        wp_update_post( $arg );    
+                        continue;
+                    }
+
                     $course = array(
                         'user_id' => $user_id, 
                         'status' => 'enrolled', 
@@ -361,6 +385,8 @@ class UIEMLMS_Api
                             'price' => get_post_meta( 2280, 'sale_price', true ) ? get_post_meta( $sid, 'sale_price', true ) : get_post_meta( $sid, 'price', true )
                         );
                     }
+
+
                 }
 
                 // Completed lesson id
@@ -431,8 +457,9 @@ class UIEMLMS_Api
             if(!empty($contact_number)){
                 update_user_meta( $user_id, 'billing_phone', $contact_number );
             }
-        endif;
         endforeach;
+
+        return $error_msg;
     }
  
 

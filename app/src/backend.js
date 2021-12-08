@@ -18,6 +18,7 @@ class App extends React.Component {
         this.state = {
             loader: false,
             saving: false,
+            errors: false,
             config: {
                 general: {title: ''},
                 page2: {title: ''}
@@ -186,12 +187,17 @@ class App extends React.Component {
         this.setState({
             loader: true
         });
-        const {csv_data} = this.state;
+        let {csv_data} = this.state;
 
+        if(typeof csv_data.at(-1)[1] == 'undefined'){
+            csv_data.pop()
+        }
+        
         this.fetchWP.post('save', {data: csv_data}).then(json => {
             this.setState({
                 loader: false, 
-                upload_complete: true
+                upload_complete: true, 
+                errors: json.errors
             });
         }).catch(error => {
             console.log('error is: ' , error);
@@ -201,63 +207,82 @@ class App extends React.Component {
 
 
     render() {
-        const {csvArray, upload_complete} = this.state;
+        const {csvArray, upload_complete, errors} = this.state;
         return (
             <div className={style.bgWhite}>
                 {this.state.loader ? <Csvloader /> : null}
 
-                <div className={style.test_class}>
+                {
+                    (errors && errors.length > 0) && (
+                        <>
+                            <div className={style.errors}>
+                                <ul>
+                                    {
+                                        errors.map((v, k) => {
+                                            return(
+                                                <li key={k}>{v}</li>
+                                            )
+                                        })
+                                    }
+                                </ul>
+                            </div>
+                        </>
+                    )
+                }
+                
+
+                <div className={errors ? `${style.test_class} ${style.haserror}`: style.test_class}>
                     {/* Left Part */}
-                <div>
-                        
-                        <label>{__('Select a CSV file','user-import-export-mlms')}</label>
-
-                        <div className={style.uploader}>
-                            <CSVReader onFileLoaded={this.csvUploadHandler} />
-                        </div>
-                        {
-                            upload_complete ? <div className={style.msgS}>
-                                <span>{__('CSV upload complete.', 'user-import-export-mlms')}</span>
-                            </div> : null
-                        }
-                        <button onClick={this.handleUpdate}>{__('Process  CSV', 'user-import-export-mlms')}</button>
-
-                </div>
-
-
-                {/* Middle Part */}
-                <div>
-                        <div className={style.right_inner}>
-                            <label>{__('Export User Data as CSV:','user-import-export-mlms')}</label>
+                    <div>
                             
-                            <CsvDownloader 
-                                filename="user-import-export-mlms" 
-                                datas={csvArray} 
-                                // separator=";"
-                                wrapColumnChar=""
-                                columns={this.state.csv_columns}
-                                >
-                                <button className={style.export} data-tip data-for="exporttoCSVTip" onClick={ (e)=>{e.preventDefault()} }>
-                                    <span className={style.svgIcon + " dashicons dashicons-database-export"}></span>
-                                {__('Export to CSV', 'user-import-export-mlms')}
-                                </button>
-                                <ReactTooltip id="exporttoCSVTip" place="top" effect="solid">
-                                            {__('Table row export to CSV.', 'user-import-export-mlms')}
-                                </ReactTooltip>
-                            </CsvDownloader>
-                        </div>
-                </div>
+                            <label>{__('Select a CSV file','user-import-export-mlms')}</label>
 
-                {/* Right Part */}
-                <div>
-                        <div className={style.right_inner}>
-                            <label>{__('Download CSV Demo File:','user-import-export-mlms')}</label>
-                            <a href={this.state.assets_url + '/csv/msstudy-import-export-template.csv'} download >
-                                <span className={style.svgIcon + " dashicons dashicons-database-import"}></span>
-                                {__('Download CSV Sample', 'user-import-export-mlms')}
-                            </a>
-                        </div>
-                </div>
+                            <div className={style.uploader}>
+                                <CSVReader onFileLoaded={this.csvUploadHandler} />
+                            </div>
+                            {
+                                upload_complete ? <div className={style.msgS}>
+                                    <span>{__('CSV upload complete.', 'user-import-export-mlms')}</span>
+                                </div> : null
+                            }
+                            <button onClick={this.handleUpdate}>{__('Process  CSV', 'user-import-export-mlms')}</button>
+
+                    </div>
+
+
+                    {/* Middle Part */}
+                    <div>
+                            <div className={style.right_inner}>
+                                <label>{__('Export User Data as CSV:','user-import-export-mlms')}</label>
+                                
+                                <CsvDownloader 
+                                    filename="user-import-export-mlms" 
+                                    datas={csvArray} 
+                                    // separator=";"
+                                    wrapColumnChar=""
+                                    columns={this.state.csv_columns}
+                                    >
+                                    <button className={style.export} data-tip data-for="exporttoCSVTip" onClick={ (e)=>{e.preventDefault()} }>
+                                        <span className={style.svgIcon + " dashicons dashicons-database-export"}></span>
+                                    {__('Export to CSV', 'user-import-export-mlms')}
+                                    </button>
+                                    <ReactTooltip id="exporttoCSVTip" place="top" effect="solid">
+                                                {__('Table row export to CSV.', 'user-import-export-mlms')}
+                                    </ReactTooltip>
+                                </CsvDownloader>
+                            </div>
+                    </div>
+
+                    {/* Right Part */}
+                    <div>
+                            <div className={style.right_inner}>
+                                <label>{__('Download CSV Demo File:','user-import-export-mlms')}</label>
+                                <a href={this.state.assets_url + '/csv/msstudy-import-export-template.csv'} download >
+                                    <span className={style.svgIcon + " dashicons dashicons-database-import"}></span>
+                                    {__('Download CSV Sample', 'user-import-export-mlms')}
+                                </a>
+                            </div>
+                    </div>
                 </div>
 
             </div>

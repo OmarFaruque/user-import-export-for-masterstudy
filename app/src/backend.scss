@@ -15,11 +15,26 @@ $button_bg: #1A78F2;
     border-radius: 5px;
     position: relative;
     max-width: 100%;
+    .errors{
+      padding: 20px 40px 10px 40px;
+      background-color: aliceblue;
+      margin-bottom: 15px;
+      ul{
+        list-style: disc;
+        margin-left: 15px;
+        li{
+          color: brown;
+        }
+      }
+    }
     .test_class{
       width: 100%;
-      padding: 40px;
+      padding: 40px 40px 40px 40px;
       border-radius: 5px;
       display: flex;
+      &.haserror{
+        padding-top: 0;
+      }
       >div{
         flex: 1
       }
