@@ -129,6 +129,7 @@ class UIEMLMS_Backend
             // enqueue scripts & styles.
             add_action('admin_enqueue_scripts', array($this, 'adminEnqueueScripts'), 10, 1);
             add_action('admin_enqueue_scripts', array($this, 'adminEnqueueStyles'), 10, 1);
+            add_filter( 'stm_lms_extra_user_fields', array($this, 'uiemlms_add_extra_fields') );
         }else{
             // Admin notice if MasterStudy in inactive 
             add_action('admin_notices', array($this, 'noticeNeedMasterStudy'));
@@ -136,7 +137,33 @@ class UIEMLMS_Backend
     }
 
 
+    /**
+     * @access  public
+     * @description add additional field in profile page
+     */
+    public function uiemlms_add_extra_fields($fields){
+        $newfields = array(
+            'uiemlms_address' => array(
+                'label' => esc_html__('Address', 'user-import-export-mlms'),
+				'icon' => 'facebook-f',
+            ), 
+            'uiemlms_organization' => array(
+                'label' => esc_html__('Organization', 'user-import-export-mlms'),
+				'icon' => 'facebook-f',
+            ), 
+            'uiemlms_contact_number' => array(
+                'label' => esc_html__('Contact number', 'user-import-export-mlms'),
+				'icon' => 'facebook-f',
+            ), 
+            'uiemlms_order_by' => array(
+                'label' => esc_html__('Order By', 'user-import-export-mlms'),
+				'icon' => 'facebook-f',
+            )
+        );
 
+        $fields = array_merge($fields, $newfields);
+        return $fields;
+    }
 
     /**
      * Check if learnpress is activated

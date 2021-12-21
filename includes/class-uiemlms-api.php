@@ -84,14 +84,9 @@ class UIEMLMS_Api
 
     public function testF(){
 
-        $enrold = stm_lms_get_user_course(266, 2290);
-
         
-        echo 'enrolled <br/><pre>';
-        print_r($enrold);
-        echo '</pre>';
 
-        // $usersmeta = get_user_meta( 2, 'submission_history', true );
+        // $usersmeta = get_user_meta( 258 );
         // echo 'usermeata 1 <br/><pre>';
         // print_r($usersmeta);
         // echo '</pre>';
@@ -147,9 +142,9 @@ class UIEMLMS_Api
             $lessonsArray = implode(',', $lessonsArray);
 
             
-            $address = get_user_meta( $v->ID, 'billing_address_1', true ) ? get_user_meta( $v->ID, 'billing_address_1', true ) : get_user_meta( $v->ID, 'shipping_address_1', true );
+            $address = get_user_meta( $v->ID, 'uiemlms_address', true ) ? get_user_meta( $v->ID, 'uiemlms_address', true ) : '';
             
-            $company = get_user_meta( $v->ID, 'billing_company', true ) ? get_user_meta( $v->ID, 'billing_company', true ) : get_user_meta( $v->ID, 'shipping_company', true );
+            $organization = get_user_meta( $v->ID, 'uiemlms_organization', true ) ? get_user_meta( $v->ID, 'uiemlms_organization', true ) : '';
 
             //Order
             $order = STM_LMS_Order::_user_orders($v->ID);
@@ -180,9 +175,9 @@ class UIEMLMS_Api
                 'completed_lesson_id' => $lessonsArray, 
                 'reset_progress' => '', 
                 'address' => $address, 
-                'organization' => $company,
-                'contact_number' => get_user_meta( $v->ID, 'billing_phone', true ), 
-                'order_by' => '', 
+                'organization' => $organization,
+                'contact_number' => get_user_meta( $v->ID, 'uiemlms_contact_number', true ), 
+                'order_by' => get_user_meta( $v->ID, 'uiemlms_order_by', true ), 
                 'order_no' => implode('-', $order_ids), 
                 'order_key' => implode('-', $order_keys), 
                 'order_status' => implode('-', $order_status), 
@@ -477,17 +472,19 @@ class UIEMLMS_Api
 
             // WooCommerce User meta data
             if(!empty($address)){
-                update_user_meta( $user_id, 'billing_address_1', $address );
-                update_user_meta( $user_id, 'shipping_address_1', $address );
+                update_user_meta( $user_id, 'uiemlms_address', $address );
             }
 
             if(!empty($organization)){
-                update_user_meta( $user_id, 'billing_company', $organization );
-                update_user_meta( $user_id, 'shipping_company', $organization );
+                update_user_meta( $user_id, 'uiemlms_organization', $organization );
             }
 
             if(!empty($contact_number)){
-                update_user_meta( $user_id, 'billing_phone', $contact_number );
+                update_user_meta( $user_id, 'uiemlms_contact_number', $contact_number );
+            }
+
+            if(!empty($order_by)){
+                update_user_meta( $user_id, 'uiemlms_order_by', $order_by );
             }
         endforeach;
 
