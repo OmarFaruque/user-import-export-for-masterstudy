@@ -48,8 +48,6 @@ class UIEMLMS_Api
         $this->token = UIEMLMS_TOKEN;
 
 
-        add_action( 'wp_head', array($this, 'testF') );
-
         add_action(
             'rest_api_init',
             function () {
@@ -82,21 +80,6 @@ class UIEMLMS_Api
 
 
 
-    public function testF(){
-
-        
-
-        // $usersmeta = get_user_meta( 258 );
-        // echo 'usermeata 1 <br/><pre>';
-        // print_r($usersmeta);
-        // echo '</pre>';
-
-
-        // $usersmeta2 = get_user_meta( 261, 'submission_history', true );
-        // echo 'usermeata 2 <br/><pre>';
-        // print_r($usersmeta2);
-        // echo '</pre>';
-    }
 
 
     /**
