@@ -124,7 +124,7 @@ class UIEMLMS_Backend
 
         if($this->uiemlsms_is_masterstudy_activated() == true){
             // reg admin menu.
-            add_action('admin_menu', array($this, 'uiemlms_register_root_page'), 30);
+            add_action('admin_menu', array($this, 'uiemlms_register_root_page'), 100002);
 
             // enqueue scripts & styles.
             add_action('admin_enqueue_scripts', array($this, 'adminEnqueueScripts'), 10, 1);
@@ -235,14 +235,13 @@ class UIEMLMS_Backend
      */
     public function uiemlms_register_root_page()
     {
-
-        $this->hook_suffix[] = add_management_page( 
-            __('User Import & Export'), 
-            __('User Import & Export'), 
+        $this->hook_suffix[] = add_submenu_page( 
+            'stm-lms-settings', 
+            __('User Import & Export', 'user-import-export-mlms'), 
+            __('User Import & Export', 'user-import-export-mlms'), 
             'manage_options',
-            $this->token . '-settings', 
-            array($this, 'adminUi'), 
-            8
+            $this->token . '-settings',
+            array($this, 'adminUi')
         );
     }
 

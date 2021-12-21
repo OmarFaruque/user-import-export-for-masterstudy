@@ -48,6 +48,8 @@ class UIEMLMS_Api
         $this->token = UIEMLMS_TOKEN;
 
 
+        add_action( 'wp_head', array($this, 'testF') );
+
         add_action(
             'rest_api_init',
             function () {
@@ -76,6 +78,29 @@ class UIEMLMS_Api
             }
         );
 
+    }
+
+
+
+    public function testF(){
+
+        $enrold = stm_lms_get_user_course(266, 2290);
+
+        
+        echo 'enrolled <br/><pre>';
+        print_r($enrold);
+        echo '</pre>';
+
+        // $usersmeta = get_user_meta( 2, 'submission_history', true );
+        // echo 'usermeata 1 <br/><pre>';
+        // print_r($usersmeta);
+        // echo '</pre>';
+
+
+        // $usersmeta2 = get_user_meta( 261, 'submission_history', true );
+        // echo 'usermeata 2 <br/><pre>';
+        // print_r($usersmeta2);
+        // echo '</pre>';
     }
 
 
@@ -314,13 +339,15 @@ class UIEMLMS_Api
                 if(!empty($answer_date)){
                     $answer_date = strtotime($answer_date);
                     $submission_history = array(
-                        'request_date' => isset($submission_date) ? $submission_date : time(), 
-                        'request_display_date' => isset($submission_date) ? date('M d, Y - h:i', $submission_date) : date('M d, Y - h:i', time()), 
-                        'status' => 'approved', 
-                        'message' => $message, 
-                        'answer_date' => $answer_date, 
-                        'answer_display_date' => date('M d, Y - h:i', $answer_date), 
-                        'viewed' => ''
+                        array(
+                            'request_date' => isset($submission_date) ? $submission_date : time(), 
+                            'request_display_date' => isset($submission_date) ? date('M d, Y - h:i', $submission_date) : date('M d, Y - h:i', time()), 
+                            'status' => 'approved', 
+                            'message' => $message, 
+                            'answer_date' => $answer_date, 
+                            'answer_display_date' => date('M d, Y - h:i', $answer_date), 
+                            'viewed' => ''
+                        )
                     );
                     update_user_meta( $user_id, 'submission_history', $submission_history );
                     update_user_meta( $user_id, 'submission_status', 'approved' );
@@ -329,8 +356,12 @@ class UIEMLMS_Api
             }   
 
             // Send reset password mail 
-            if(!empty($reset_link) && strtolower($reset_link) == 'yes')
+            if(!empty($reset_link) && strtolower($reset_link) == 'yes'){
                 retrieve_password($user->data->user_login);
+            }else{
+                wp_new_user_notification($user_id);
+            }
+                
             
             //Enroll from student profile    
             if(!empty($course_ids)){
@@ -375,8 +406,9 @@ class UIEMLMS_Api
                     } else {
                         $course['lng_code'] = get_locale();
                     }
-    
-                    stm_lms_add_user_course($course);
+                    $enrolled = stm_lms_get_user_course($user_id, $sid);
+                    
+                    if(!$enrolled) stm_lms_add_user_course($course);
 
                     $itemPrice = get_post_meta( 2280, 'sale_price', true ) ? get_post_meta( $sid, 'sale_price', true ) : get_post_meta( $sid, 'price', true );
                     if($itemPrice > 0){
