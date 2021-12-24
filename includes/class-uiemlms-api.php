@@ -80,8 +80,6 @@ class UIEMLMS_Api
 
 
 
-
-
     /**
      * GEt user data for export csv
      * @access public
@@ -183,6 +181,29 @@ class UIEMLMS_Api
             'errors' => $csv_import
         ), 200);
     }
+
+
+
+
+    /**
+     * @param new suer notification, user & blog information 
+     * @access  public
+     * @desc    Customize new uer notification email
+     */
+    public function uiemlms_wp_new_user_notification_email($user_name, $email, $password){
+        
+        $message  = __( 'Hi there,' ) . "\r\n\r\n";
+        $message .= sprintf( __( "Welcome to %s! Here's how to log in:" ), get_option('blogname') ) . "\r\n\r\n";
+        $message .= wp_login_url() . "\r\n";
+        $message .= sprintf( __('Username: %s'), $user_name ) . "\r\n";
+        $message .= sprintf( __('Email: %s'), $email ) . "\r\n";
+        $message .= sprintf( __('Password: %s'), $password ) . "\r\n\r\n";
+        $message .= sprintf( __('If you have any problems, please contact me at %s.'), get_option('admin_email') ) . "\r\n\r\n";
+        $message .= __( 'bye!' );
+     
+        wp_mail($email, sprintf(__('[%s] Your username and password'), get_option('blogname')), $message);
+    }
+
 
 
     /**
@@ -337,7 +358,7 @@ class UIEMLMS_Api
             if(!empty($reset_link) && strtolower($reset_link) == 'yes'){
                 retrieve_password($user->data->user_login);
             }else{
-                wp_new_user_notification($user_id);
+                    $this->uiemlms_wp_new_user_notification_email($user_name, $email, $password);
             }
                 
             
