@@ -63,7 +63,7 @@ class UIEMLMS_Api
                 );
 
                 
-                //Delete shipping option from custom page
+                //Export user data as CSV
                 register_rest_route(
                     $this->token . '/v1',
                     '/userdata/',
@@ -80,6 +80,10 @@ class UIEMLMS_Api
 
 
 
+
+ 
+
+
     /**
      * GEt user data for export csv
      * @access public
@@ -92,27 +96,54 @@ class UIEMLMS_Api
             $submission_date = get_user_meta( $v->ID, 'submission_date', true ) ? date('m/d/Y', get_user_meta( $v->ID, 'submission_date', true )) : '';
 
             $submission_history = get_user_meta( $v->ID, 'submission_history', true );
-            $answer_date = $submission_history && isset($submission_history['answer_date']) ? date('m/d/Y', $submission_history['answer_date']) : '';
-
-            $userCourse = stm_lms_get_user_courses($v->ID, '', '', array('course_id', 'start_time', 'progress_percent'));
-            $cArray = wp_list_pluck($userCourse, 'course_id');
-            $sTime  = wp_list_pluck($userCourse, 'start_time');
-            $progress = wp_list_pluck( $userCourse, 'progress_percent' );
-
-            foreach($sTime as $k => $singleTime) $sTime[$k] = date('m/d/Y', $singleTime);
-            foreach($progress as $s => $singleProgress){
-                if($singleProgress == 100)
-                    $progress[$s] = __('Completed', 'user-import-export-mlms');
+            
+            $answer_date = $message = array();
+            
+            if($submission_history && is_array($submission_history) && count($submission_history) > 0){
+                foreach($submission_history as $history){
+                    if(isset($history['answer_date'])) $answer_date[] = date('m/d/Y', $history['answer_date']);
+                    if(isset($history['message'])) $message[] = $history['message'];
+                }
             }
 
-            $lessonsArray = array();
-            foreach($cArray as $sc){
-               $lessons = stm_lms_get_user_lessons($sc, array('lesson_id')); 
-               if($lessons){
-                   $lessons = wp_list_pluck( $lessons, 0);
-                   $lessonsArray = array_merge($lessons, $lessonsArray);
-               }
+            
+            $lessonsArray = $sTime = $cArray = $progress = array();
+
+            if(in_array('stm_lms_instructor', $v->roles)){
+                $args = array(
+                    'author'        =>  316,
+                    'orderby'       =>  'post_date',
+                    'order'         =>  'ASC',
+                    'post_type'     => 'stm-courses',
+                    'posts_per_page' => -1
+                    );
+        
+                $posts = get_posts($args);
+                $cArray = wp_list_pluck($posts, 'ID');
+            }else{
+                $userCourse = stm_lms_get_user_courses($v->ID, '', '', array('course_id', 'start_time', 'progress_percent'));
+                $cArray = wp_list_pluck($userCourse, 'course_id');
+                $sTime  = wp_list_pluck($userCourse, 'start_time');
+                $progress = wp_list_pluck( $userCourse, 'progress_percent' );
+                
+                foreach($cArray as $sc){
+                    $lessons = stm_lms_get_user_lessons($sc, array('lesson_id')); 
+                    if($lessons){
+                        $lessons = wp_list_pluck( $lessons, 0);
+                        $lessonsArray = array_merge($lessons, $lessonsArray);
+                    }
+                }
+
+                foreach($sTime as $k => $singleTime) $sTime[$k] = date('m/d/Y', $singleTime);
+
+
+                foreach($progress as $s => $singleProgress){
+                    if($singleProgress == 100)
+                        $progress[$s] = __('Completed', 'user-import-export-mlms');
+                }
             }
+
+            
 
             $sTime = implode('-', $sTime);
             
@@ -140,14 +171,14 @@ class UIEMLMS_Api
                 'user_id' => $v->ID, 
                 'user_name' => $v->data->user_login, 
                 'email' => $v->data->user_email, 
-                'role' => $v->roles[0], 
+                'role' => implode('-', $v->roles), 
                 'first_name' => get_user_meta( $v->ID, 'first_name', true ),
                 'last_name' => get_user_meta( $v->ID, 'last_name', true ), 
                 'degree' => $instructor_data ? $instructor_data['degree'] : '', 
                 'expertise' => $instructor_data ? $instructor_data['expertize'] : '',
                 'submission_date' => $submission_date, 
-                'answer_date' => $answer_date, 
-                'message' => isset($submission_history['message']) ? $submission_history['message'] : '', 
+                'answer_date' => implode('-', $answer_date), 
+                'message' => implode('-', $message), 
                 'password' => '', 
                 'send_reset_link' => '',
                 'course_id' => $cArray, 
@@ -159,10 +190,10 @@ class UIEMLMS_Api
                 'organization' => $organization,
                 'contact_number' => get_user_meta( $v->ID, 'uiemlms_contact_number', true ), 
                 'order_by' => get_user_meta( $v->ID, 'uiemlms_order_by', true ), 
-                'order_no' => implode('-', $order_ids), 
-                'order_key' => implode('-', $order_keys), 
-                'order_status' => implode('-', $order_status), 
-                'order_date' => implode('-', $order_dates)
+                // 'order_no' => implode('-', $order_ids), 
+                // 'order_key' => implode('-', $order_keys), 
+                // 'order_status' => implode('-', $order_status), 
+                // 'order_date' => implode('-', $order_dates)
             );
         }, $users);
 
@@ -216,7 +247,6 @@ class UIEMLMS_Api
         
         $error_msg = array();
         foreach($data as $index => $sdata):
-                // update_option( 'testoption', $sdata );
             $user_name          = $sdata[1]; // Required
             $email              = $sdata[2]; // Required
             $role               = strtolower($sdata[3]); // Required
@@ -262,10 +292,10 @@ class UIEMLMS_Api
             $organization       = $sdata[19];
             $contact_number     = $sdata[20];
             $order_by           = $sdata[21];
-            $order_no           = $sdata[22];
-            $order_key          = $sdata[23];
-            $order_status       = $sdata[24];
-            $order_date         = $sdata[25];
+            // $order_no           = $sdata[22];
+            // $order_key          = $sdata[23];
+            // $order_status       = $sdata[24];
+            // $order_date         = $sdata[25];
 
 
 
@@ -409,11 +439,11 @@ class UIEMLMS_Api
                     
                     if(!$enrolled) stm_lms_add_user_course($course);
 
-                    $itemPrice = get_post_meta( 2280, 'sale_price', true ) ? get_post_meta( $sid, 'sale_price', true ) : get_post_meta( $sid, 'price', true );
+                    $itemPrice = get_post_meta( $sid, 'sale_price', true ) ? get_post_meta( $sid, 'sale_price', true ) : get_post_meta( $sid, 'price', true );
                     if($itemPrice > 0){
                         $cart_items[] = array(
                             'item_id' => $sid,
-                            'price' => get_post_meta( 2280, 'sale_price', true ) ? get_post_meta( $sid, 'sale_price', true ) : get_post_meta( $sid, 'price', true )
+                            'price' => get_post_meta( $sid, 'sale_price', true ) ? get_post_meta( $sid, 'sale_price', true ) : get_post_meta( $sid, 'price', true )
                         );
                     }
 
@@ -466,10 +496,10 @@ class UIEMLMS_Api
                     $order_status = !empty($order_status) ? strtolower($order_status) : 'pending';
                     $order_date = !empty($order_date) ? strtotime($order_date) : '';
 
-                    if($invoice){
-                        update_post_meta( $invoice, 'status', $order_status );
-                        update_post_meta( $invoice, 'date', $order_date );
-                    }
+                    // if($invoice){
+                    //     update_post_meta( $invoice, 'status', $order_status );
+                    //     update_post_meta( $invoice, 'date', $order_date );
+                    // }
                     
                 }
             }
