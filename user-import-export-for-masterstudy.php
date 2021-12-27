@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: User Import Export for MasterStudy LMS
- * Version: 1.0.0
+ * Version: 1.0.1
  * Description: "User Import Export for MasterStudy LMS" is a "MasterStudy LMS" addons and it's easy to use. We don't like to user with tons of settings and options so we implemented very clean and easy understable setting panel where user can easily import and export as CSV.
  * Author: Omar Faruque
  * Author URI: https://www.linkedin.com/in/omarfaruque2020/
@@ -14,7 +14,7 @@
  */
 
 define('UIEMLMS_TOKEN', 'uiemlms');
-define('UIEMLMS_VERSION', '1.0.0');
+define('UIEMLMS_VERSION', '1.0.1');
 define('UIEMLMS_FILE', __FILE__);
 define('UIEMLMS_PLUGIN_NAME', 'User Import Export for MasterStudy LMS');
 

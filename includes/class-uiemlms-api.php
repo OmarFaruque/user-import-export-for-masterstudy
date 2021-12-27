@@ -190,10 +190,10 @@ class UIEMLMS_Api
                 'organization' => $organization,
                 'contact_number' => get_user_meta( $v->ID, 'uiemlms_contact_number', true ), 
                 'order_by' => get_user_meta( $v->ID, 'uiemlms_order_by', true ), 
-                // 'order_no' => implode('-', $order_ids), 
-                // 'order_key' => implode('-', $order_keys), 
-                // 'order_status' => implode('-', $order_status), 
-                // 'order_date' => implode('-', $order_dates)
+                'order_no' => implode('-', $order_ids), 
+                'order_key' => implode('-', $order_keys), 
+                'order_status' => implode('-', $order_status), 
+                'order_date' => implode('-', $order_dates)
             );
         }, $users);
 
@@ -292,10 +292,10 @@ class UIEMLMS_Api
             $organization       = $sdata[19];
             $contact_number     = $sdata[20];
             $order_by           = $sdata[21];
-            // $order_no           = $sdata[22];
-            // $order_key          = $sdata[23];
-            // $order_status       = $sdata[24];
-            // $order_date         = $sdata[25];
+            $order_no           = $sdata[22];
+            $order_key          = $sdata[23];
+            $order_status       = $sdata[24];
+            $order_date         = $sdata[25];
 
 
 
@@ -496,10 +496,10 @@ class UIEMLMS_Api
                     $order_status = !empty($order_status) ? strtolower($order_status) : 'pending';
                     $order_date = !empty($order_date) ? strtotime($order_date) : '';
 
-                    // if($invoice){
-                    //     update_post_meta( $invoice, 'status', $order_status );
-                    //     update_post_meta( $invoice, 'date', $order_date );
-                    // }
+                    if($invoice){
+                        update_post_meta( $invoice, 'status', $order_status );
+                        update_post_meta( $invoice, 'date', $order_date );
+                    }
                     
                 }
             }
